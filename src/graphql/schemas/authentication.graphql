@@ -1,0 +1,17 @@
+extend type Query {
+	login(email: String!, password: String!): Authentication
+	checkEmail(email: String!): Boolean
+	refreshToken(token: String!): Authentication
+}
+
+extend type Mutation {
+	registerPractitioner(name: String!, email: String!, password: String!): Authentication
+
+	requestPasswordReset(email: String!): Boolean
+	resetPassword(token: String!, password: String!): Authentication
+}
+
+type Authentication {
+	user: User!
+	token: String!
+}

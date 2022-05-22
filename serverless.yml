@@ -1,0 +1,63 @@
+service: sls-*NAME*-api
+useDotenv: true
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: me-south-1
+  stage: prod
+  apiGateway:
+    binaryMediaTypes:
+      - multipart/form-data
+  deploymentMethod: direct
+functions:
+  graphql:
+    handler: src/index.graphqlHandler
+    events:
+      - http:
+          path: /
+          method: post
+          cors:
+            origin: true
+      - http:
+          path: /
+          method: options
+          cors:
+            origin: true
+  redirect:
+    handler: src/redirect.redirectHandler
+    events:
+      - http:
+          path: /
+          method: get
+          cors:
+            origin: true
+  cronExpireTokens:
+    handler: src/cron-jobs.expireTokens
+    events:
+      - schedule: rate(1 hour)
+plugins:
+  - serverless-domain-manager
+  - serverless-webpack
+  - serverless-dotenv-plugin
+custom:
+  includeDependencies: true
+  webpack:
+    includeModules:
+      forceInclude:
+        - prisma
+    packager: 'yarn'
+    packagerOptions:
+      scripts:
+        - npx prisma generate
+        - rm node_modules/.prisma/client/libquery_engine-debian-openssl-1.1.x.so.node
+        - rm -rf node_modules/prisma/
+        - rm -rf node_modules/@prisma/engines
+        - rm -rf node_modules/@prisma/engines-version
+  customDomain:
+    domainName: *API_URL*
+    basePath: ''
+    createRoute53Record: true
+    stage: ${self:provider.stage}
+package:
+  patterns:
+    - '!src/graphql.ts'

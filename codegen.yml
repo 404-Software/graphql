@@ -1,0 +1,14 @@
+overwrite: true
+schema: 'src/graphql/schemas/**/*.graphql'
+documents: null
+generates:
+  ./src/gql-types.ts:
+    config:
+      contextType: ./context#Context
+      enumsAsTypes: true
+      mapperTypeSuffix: Model
+      mappers:
+        User: '@prisma/client#User'
+    plugins:
+      - 'typescript'
+      - 'typescript-resolvers'
