@@ -1,17 +1,20 @@
 extend type Query {
-	Me: User
-	User(id: ID!): User
-	allUsers(paginate: Paginate, sort: Sort, filter: UserFilter): [User!]!
-	_allUsersCount(filter: UserFilter): Int!
+	myUser: User
+	user(where: UserWhereUniqueInput!): User
+	users(
+		where: UserWhereInput = {}
+		orderBy: [UserOrderByInput!] = [{ createdAt: "desc" }]
+		take: Int = 10
+		skip: Int = 0
+	): [User!]!
+	usersCount(where: UserWhereInput = {}): Int
 }
 
 extend type Mutation {
-	createUser(name: String!, email: String!, password: String!, role: UserRole): User!
-
-	updateUser(id: ID!, name: String, email: String, password: String, role: UserRole): User
-	updateMe(name: String, email: String): User
-
-	deleteUser(id: ID!): User
+	createUser(data: UserCreateInput!): User
+	updateMyUser(data: MyUserUpdateInput!): User
+	updateUser(where: UserWhereUniqueInput!, data: UserUpdateInput!): User
+	deleteUser(where: UserWhereUniqueInput!): User
 }
 
 enum UserRole {
@@ -21,7 +24,6 @@ enum UserRole {
 
 type User {
 	id: ID!
-
 	name: String!
 	email: String!
 	role: UserRole!
@@ -30,8 +32,51 @@ type User {
 	updatedAt: Date!
 }
 
-input UserFilter {
+input UserWhereUniqueInput {
+	id: ID
+	email: String
+}
+
+input UserRoleNullableFilter {
+	equals: UserRole
+	in: [UserRole!]
+	notIn: [UserRole!]
+}
+
+input UserWhereInput {
+	AND: [UserWhereInput!]
+	OR: [UserWhereInput!]
+	NOT: [UserWhereInput!]
+	id: IDFilter
+	name: StringNullableFilter
+	email: StringNullableFilter
+	role: UserRoleNullableFilter
+}
+
+input UserCreateInput {
+	name: String!
+	email: String!
+	password: String!
+	role: UserRole
+}
+
+input UserUpdateInput {
 	name: String
 	email: String
+	password: String
 	role: UserRole
+}
+
+input MyUserUpdateInput {
+	name: String
+	email: String
+}
+
+input UserOrderByInput {
+	id: OrderDirection
+	name: OrderDirection
+	email: OrderDirection
+	role: OrderDirection
+
+	createdAt: OrderDirection
 }

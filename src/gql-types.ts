@@ -2,7 +2,7 @@ import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from '
 import { User as UserModel } from '@prisma/client';
 import { Context } from './context';
 export type Maybe<T> = T | null;
-export type InputMaybe<T> = Maybe<T>;
+export type InputMaybe<T> = T | undefined;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -16,7 +16,18 @@ export type Scalars = {
   Int: number;
   Float: number;
   Date: any;
+  Null: any;
+  NullableID: null | string;
+  NullableString: null | string;
   Upload: any;
+};
+
+export type ArrayNullableFilter = {
+  equals?: InputMaybe<Array<Scalars['String']>>;
+  has?: InputMaybe<Scalars['String']>;
+  hasEvery?: InputMaybe<Array<Scalars['String']>>;
+  hasSome?: InputMaybe<Array<Scalars['String']>>;
+  isEmpty?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type Authentication = {
@@ -25,122 +36,185 @@ export type Authentication = {
   user: User;
 };
 
+export type CheckEmailInput = {
+  email: Scalars['String'];
+};
+
+export type IdFilter = {
+  equals?: InputMaybe<Scalars['ID']>;
+  gt?: InputMaybe<Scalars['ID']>;
+  gte?: InputMaybe<Scalars['ID']>;
+  in?: InputMaybe<Array<Scalars['ID']>>;
+  lt?: InputMaybe<Scalars['ID']>;
+  lte?: InputMaybe<Scalars['ID']>;
+  not?: InputMaybe<IdFilter>;
+  notIn?: InputMaybe<Array<Scalars['ID']>>;
+};
+
+export type LoginInput = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']>;
-  createUser: User;
+  createUser?: Maybe<User>;
   deleteUser?: Maybe<User>;
-  registerPractitioner?: Maybe<Authentication>;
+  register?: Maybe<Authentication>;
   requestPasswordReset?: Maybe<Scalars['Boolean']>;
   resetPassword?: Maybe<Authentication>;
-  updateMe?: Maybe<User>;
+  updateMyUser?: Maybe<User>;
   updateUser?: Maybe<User>;
 };
 
 
 export type MutationCreateUserArgs = {
-  email: Scalars['String'];
-  name: Scalars['String'];
-  password: Scalars['String'];
-  role?: InputMaybe<UserRole>;
+  data: UserCreateInput;
 };
 
 
 export type MutationDeleteUserArgs = {
-  id: Scalars['ID'];
+  where: UserWhereUniqueInput;
 };
 
 
-export type MutationRegisterPractitionerArgs = {
+export type MutationRegisterArgs = {
+  data: RegistrationInput;
+};
+
+
+export type MutationRequestPasswordResetArgs = {
+  data: RequestPasswordResetInput;
+};
+
+
+export type MutationResetPasswordArgs = {
+  data: ResetPasswordInput;
+};
+
+
+export type MutationUpdateMyUserArgs = {
+  data: MyUserUpdateInput;
+};
+
+
+export type MutationUpdateUserArgs = {
+  data: UserUpdateInput;
+  where: UserWhereUniqueInput;
+};
+
+export type MyUserUpdateInput = {
+  email?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export type NestedStringNullableFilter = {
+  contains?: InputMaybe<Scalars['String']>;
+  endsWith?: InputMaybe<Scalars['String']>;
+  equals?: InputMaybe<Scalars['String']>;
+  gt?: InputMaybe<Scalars['String']>;
+  gte?: InputMaybe<Scalars['String']>;
+  in?: InputMaybe<Array<Scalars['String']>>;
+  lt?: InputMaybe<Scalars['String']>;
+  lte?: InputMaybe<Scalars['String']>;
+  not?: InputMaybe<NestedStringNullableFilter>;
+  notIn?: InputMaybe<Array<Scalars['String']>>;
+  startsWith?: InputMaybe<Scalars['String']>;
+};
+
+export type OrderDirection =
+  | 'asc'
+  | 'desc';
+
+export type Query = {
+  __typename?: 'Query';
+  _empty?: Maybe<Scalars['String']>;
+  checkEmail?: Maybe<Scalars['Boolean']>;
+  login?: Maybe<Authentication>;
+  myUser?: Maybe<User>;
+  refreshToken?: Maybe<Authentication>;
+  user?: Maybe<User>;
+  users: Array<User>;
+  usersCount?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryCheckEmailArgs = {
+  data: CheckEmailInput;
+};
+
+
+export type QueryLoginArgs = {
+  data: LoginInput;
+};
+
+
+export type QueryRefreshTokenArgs = {
+  data: RefreshTokenInput;
+};
+
+
+export type QueryUserArgs = {
+  where: UserWhereUniqueInput;
+};
+
+
+export type QueryUsersArgs = {
+  orderBy?: InputMaybe<Array<UserOrderByInput>>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<UserWhereInput>;
+};
+
+
+export type QueryUsersCountArgs = {
+  where?: InputMaybe<UserWhereInput>;
+};
+
+export type QueryMode =
+  | 'default'
+  | 'insensitive';
+
+export type RefreshTokenInput = {
+  token: Scalars['String'];
+};
+
+export type RegistrationInput = {
   email: Scalars['String'];
   name: Scalars['String'];
   password: Scalars['String'];
 };
 
+export type RelationshipNullableFilter = {
+  id?: InputMaybe<Scalars['ID']>;
+  is?: InputMaybe<Scalars['Null']>;
+  isNot?: InputMaybe<Scalars['Null']>;
+};
 
-export type MutationRequestPasswordResetArgs = {
+export type RequestPasswordResetInput = {
   email: Scalars['String'];
 };
 
-
-export type MutationResetPasswordArgs = {
+export type ResetPasswordInput = {
   password: Scalars['String'];
   token: Scalars['String'];
 };
 
-
-export type MutationUpdateMeArgs = {
-  email?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
+export type StringNullableFilter = {
+  contains?: InputMaybe<Scalars['String']>;
+  endsWith?: InputMaybe<Scalars['String']>;
+  equals?: InputMaybe<Scalars['String']>;
+  gt?: InputMaybe<Scalars['String']>;
+  gte?: InputMaybe<Scalars['String']>;
+  in?: InputMaybe<Array<Scalars['String']>>;
+  lt?: InputMaybe<Scalars['String']>;
+  lte?: InputMaybe<Scalars['String']>;
+  mode?: InputMaybe<QueryMode>;
+  not?: InputMaybe<NestedStringNullableFilter>;
+  notIn?: InputMaybe<Array<Scalars['String']>>;
+  startsWith?: InputMaybe<Scalars['String']>;
 };
-
-
-export type MutationUpdateUserArgs = {
-  email?: InputMaybe<Scalars['String']>;
-  id: Scalars['ID'];
-  name?: InputMaybe<Scalars['String']>;
-  password?: InputMaybe<Scalars['String']>;
-  role?: InputMaybe<UserRole>;
-};
-
-export type Paginate = {
-  page?: InputMaybe<Scalars['Int']>;
-  perPage?: InputMaybe<Scalars['Int']>;
-};
-
-export type Query = {
-  __typename?: 'Query';
-  Me?: Maybe<User>;
-  User?: Maybe<User>;
-  _allUsersCount: Scalars['Int'];
-  _empty?: Maybe<Scalars['String']>;
-  allUsers: Array<User>;
-  checkEmail?: Maybe<Scalars['Boolean']>;
-  login?: Maybe<Authentication>;
-  refreshToken?: Maybe<Authentication>;
-};
-
-
-export type QueryUserArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type Query_AllUsersCountArgs = {
-  filter?: InputMaybe<UserFilter>;
-};
-
-
-export type QueryAllUsersArgs = {
-  filter?: InputMaybe<UserFilter>;
-  paginate?: InputMaybe<Paginate>;
-  sort?: InputMaybe<Sort>;
-};
-
-
-export type QueryCheckEmailArgs = {
-  email: Scalars['String'];
-};
-
-
-export type QueryLoginArgs = {
-  email: Scalars['String'];
-  password: Scalars['String'];
-};
-
-
-export type QueryRefreshTokenArgs = {
-  token: Scalars['String'];
-};
-
-export type Sort = {
-  sortField?: InputMaybe<Scalars['String']>;
-  sortOrder?: InputMaybe<SortOrder>;
-};
-
-export type SortOrder =
-  | 'ASC'
-  | 'DESC';
 
 export type User = {
   __typename?: 'User';
@@ -152,15 +226,52 @@ export type User = {
   updatedAt: Scalars['Date'];
 };
 
-export type UserFilter = {
-  email?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
+export type UserCreateInput = {
+  email: Scalars['String'];
+  name: Scalars['String'];
+  password: Scalars['String'];
   role?: InputMaybe<UserRole>;
+};
+
+export type UserOrderByInput = {
+  createdAt?: InputMaybe<OrderDirection>;
+  email?: InputMaybe<OrderDirection>;
+  id?: InputMaybe<OrderDirection>;
+  name?: InputMaybe<OrderDirection>;
+  role?: InputMaybe<OrderDirection>;
 };
 
 export type UserRole =
   | 'ADMIN'
   | 'DEFAULT';
+
+export type UserRoleNullableFilter = {
+  equals?: InputMaybe<UserRole>;
+  in?: InputMaybe<Array<UserRole>>;
+  notIn?: InputMaybe<Array<UserRole>>;
+};
+
+export type UserUpdateInput = {
+  email?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  password?: InputMaybe<Scalars['String']>;
+  role?: InputMaybe<UserRole>;
+};
+
+export type UserWhereInput = {
+  AND?: InputMaybe<Array<UserWhereInput>>;
+  NOT?: InputMaybe<Array<UserWhereInput>>;
+  OR?: InputMaybe<Array<UserWhereInput>>;
+  email?: InputMaybe<StringNullableFilter>;
+  id?: InputMaybe<IdFilter>;
+  name?: InputMaybe<StringNullableFilter>;
+  role?: InputMaybe<UserRoleNullableFilter>;
+};
+
+export type UserWhereUniqueInput = {
+  email?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+};
 
 
 
@@ -231,38 +342,75 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  ArrayNullableFilter: ArrayNullableFilter;
   Authentication: ResolverTypeWrapper<Omit<Authentication, 'user'> & { user: ResolversTypes['User'] }>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  CheckEmailInput: CheckEmailInput;
   Date: ResolverTypeWrapper<Scalars['Date']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
+  IDFilter: IdFilter;
   Int: ResolverTypeWrapper<Scalars['Int']>;
+  LoginInput: LoginInput;
   Mutation: ResolverTypeWrapper<{}>;
-  Paginate: Paginate;
+  MyUserUpdateInput: MyUserUpdateInput;
+  NestedStringNullableFilter: NestedStringNullableFilter;
+  Null: ResolverTypeWrapper<Scalars['Null']>;
+  NullableID: ResolverTypeWrapper<Scalars['NullableID']>;
+  NullableString: ResolverTypeWrapper<Scalars['NullableString']>;
+  OrderDirection: OrderDirection;
   Query: ResolverTypeWrapper<{}>;
-  Sort: Sort;
-  SortOrder: SortOrder;
+  QueryMode: QueryMode;
+  RefreshTokenInput: RefreshTokenInput;
+  RegistrationInput: RegistrationInput;
+  RelationshipNullableFilter: RelationshipNullableFilter;
+  RequestPasswordResetInput: RequestPasswordResetInput;
+  ResetPasswordInput: ResetPasswordInput;
   String: ResolverTypeWrapper<Scalars['String']>;
+  StringNullableFilter: StringNullableFilter;
   Upload: ResolverTypeWrapper<Scalars['Upload']>;
   User: ResolverTypeWrapper<UserModel>;
-  UserFilter: UserFilter;
+  UserCreateInput: UserCreateInput;
+  UserOrderByInput: UserOrderByInput;
   UserRole: UserRole;
+  UserRoleNullableFilter: UserRoleNullableFilter;
+  UserUpdateInput: UserUpdateInput;
+  UserWhereInput: UserWhereInput;
+  UserWhereUniqueInput: UserWhereUniqueInput;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  ArrayNullableFilter: ArrayNullableFilter;
   Authentication: Omit<Authentication, 'user'> & { user: ResolversParentTypes['User'] };
   Boolean: Scalars['Boolean'];
+  CheckEmailInput: CheckEmailInput;
   Date: Scalars['Date'];
   ID: Scalars['ID'];
+  IDFilter: IdFilter;
   Int: Scalars['Int'];
+  LoginInput: LoginInput;
   Mutation: {};
-  Paginate: Paginate;
+  MyUserUpdateInput: MyUserUpdateInput;
+  NestedStringNullableFilter: NestedStringNullableFilter;
+  Null: Scalars['Null'];
+  NullableID: Scalars['NullableID'];
+  NullableString: Scalars['NullableString'];
   Query: {};
-  Sort: Sort;
+  RefreshTokenInput: RefreshTokenInput;
+  RegistrationInput: RegistrationInput;
+  RelationshipNullableFilter: RelationshipNullableFilter;
+  RequestPasswordResetInput: RequestPasswordResetInput;
+  ResetPasswordInput: ResetPasswordInput;
   String: Scalars['String'];
+  StringNullableFilter: StringNullableFilter;
   Upload: Scalars['Upload'];
   User: UserModel;
-  UserFilter: UserFilter;
+  UserCreateInput: UserCreateInput;
+  UserOrderByInput: UserOrderByInput;
+  UserRoleNullableFilter: UserRoleNullableFilter;
+  UserUpdateInput: UserUpdateInput;
+  UserWhereInput: UserWhereInput;
+  UserWhereUniqueInput: UserWhereUniqueInput;
 };
 
 export type AuthenticationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Authentication'] = ResolversParentTypes['Authentication']> = {
@@ -277,24 +425,36 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'email' | 'name' | 'password'>>;
-  deleteUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
-  registerPractitioner?: Resolver<Maybe<ResolversTypes['Authentication']>, ParentType, ContextType, RequireFields<MutationRegisterPractitionerArgs, 'email' | 'name' | 'password'>>;
-  requestPasswordReset?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationRequestPasswordResetArgs, 'email'>>;
-  resetPassword?: Resolver<Maybe<ResolversTypes['Authentication']>, ParentType, ContextType, RequireFields<MutationResetPasswordArgs, 'password' | 'token'>>;
-  updateMe?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, Partial<MutationUpdateMeArgs>>;
-  updateUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'id'>>;
+  createUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'data'>>;
+  deleteUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'where'>>;
+  register?: Resolver<Maybe<ResolversTypes['Authentication']>, ParentType, ContextType, RequireFields<MutationRegisterArgs, 'data'>>;
+  requestPasswordReset?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationRequestPasswordResetArgs, 'data'>>;
+  resetPassword?: Resolver<Maybe<ResolversTypes['Authentication']>, ParentType, ContextType, RequireFields<MutationResetPasswordArgs, 'data'>>;
+  updateMyUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateMyUserArgs, 'data'>>;
+  updateUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'data' | 'where'>>;
 };
 
+export interface NullScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Null'], any> {
+  name: 'Null';
+}
+
+export interface NullableIdScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['NullableID'], any> {
+  name: 'NullableID';
+}
+
+export interface NullableStringScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['NullableString'], any> {
+  name: 'NullableString';
+}
+
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  Me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  User?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
-  _allUsersCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType, Partial<Query_AllUsersCountArgs>>;
   _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  allUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QueryAllUsersArgs>>;
-  checkEmail?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryCheckEmailArgs, 'email'>>;
-  login?: Resolver<Maybe<ResolversTypes['Authentication']>, ParentType, ContextType, RequireFields<QueryLoginArgs, 'email' | 'password'>>;
-  refreshToken?: Resolver<Maybe<ResolversTypes['Authentication']>, ParentType, ContextType, RequireFields<QueryRefreshTokenArgs, 'token'>>;
+  checkEmail?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryCheckEmailArgs, 'data'>>;
+  login?: Resolver<Maybe<ResolversTypes['Authentication']>, ParentType, ContextType, RequireFields<QueryLoginArgs, 'data'>>;
+  myUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  refreshToken?: Resolver<Maybe<ResolversTypes['Authentication']>, ParentType, ContextType, RequireFields<QueryRefreshTokenArgs, 'data'>>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'where'>>;
+  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUsersArgs, 'skip' | 'take' | 'where'>>;
+  usersCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryUsersCountArgs, 'where'>>;
 };
 
 export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
@@ -315,6 +475,9 @@ export type Resolvers<ContextType = Context> = {
   Authentication?: AuthenticationResolvers<ContextType>;
   Date?: GraphQLScalarType;
   Mutation?: MutationResolvers<ContextType>;
+  Null?: GraphQLScalarType;
+  NullableID?: GraphQLScalarType;
+  NullableString?: GraphQLScalarType;
   Query?: QueryResolvers<ContextType>;
   Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;

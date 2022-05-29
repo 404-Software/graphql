@@ -1,114 +1,91 @@
 import { Prisma } from '@prisma/client'
 import { Resolvers } from '../../gql-types'
+import ERRORS, { ApolloError } from '../../functions/errors'
 import Hash from '../../functions/hash'
-import Paginate from '../../functions/paginate'
-import Sort from '../../functions/sort'
 
 const User: Resolvers = {
 	Query: {
-		async Me(_, __, { database, requireAuth, user }) {
+		async myUser(_, __, { database, requireAuth, user }) {
 			requireAuth()
 
 			return await database.user.findUnique({ where: { id: user?.id } })
 		},
 
-		async User(_, { id }, { database, requireAuth, isAdmin }) {
+		async user(_, input, { database, requireAuth, isAdmin }) {
 			requireAuth(isAdmin)
 
-			return await database.user.findUnique({ where: { id } })
+			return await database.user.findUnique(input)
 		},
 
-		async allUsers(
-			_,
-			{ paginate, sort, filter },
-			{ database, requireAuth, isAdmin },
-		) {
+		async users(_, input, { database, requireAuth, isAdmin }) {
 			requireAuth(isAdmin)
 
-			const where: Prisma.UserWhereInput = {}
-			if (filter) {
-				if (filter.name) {
-					where.name = {
-						contains: filter.name,
-						mode: 'insensitive',
-					}
-				}
-			}
-
-			const { skip, take } = Paginate(paginate)
-
-			return await database.user.findMany({
-				where,
-				skip,
-				take,
-				orderBy: Sort(sort),
-			})
+			return await database.user.findMany(input)
 		},
 
-		async _allUsersCount(_, { filter }, { database, requireAuth, isAdmin }) {
+		async usersCount(_, input, { database, requireAuth, isAdmin }) {
 			requireAuth(isAdmin)
 
-			const where: Prisma.UserWhereInput = {}
-
-			if (filter) {
-				if (filter.name) {
-					where.name = {
-						contains: filter.name,
-						mode: 'insensitive',
-					}
-				}
-			}
-
-			return await database.user.count({ where })
+			return await database.user.count(input)
 		},
 	},
+
 	Mutation: {
 		async createUser(
 			_,
-			{ role, password, ...rest },
+			{ data: { password, ...rest } },
 			{ database, requireAuth, isAdmin },
 		) {
 			requireAuth(isAdmin)
 
+			if (password.length < 6)
+				throw ApolloError(
+					ERRORS.MALFORMED_INPUT,
+					'Password must be longer than 6 characters',
+				)
+
 			const data: Prisma.UserCreateInput = {
-				...rest,
 				password: Hash(password),
+				...rest,
 			}
-			if (role) data.role = role
 
 			return await database.user.create({ data })
 		},
 
+		async updateMyUser(_, input, { database, requireAuth, user }) {
+			requireAuth()
+
+			return await database.user.update({
+				where: { id: user?.id },
+				...input,
+			})
+		},
+
 		async updateUser(
 			_,
-			{ id, name, email, password, role },
+			{ data: { password, ...rest }, where },
 			{ database, requireAuth, isAdmin },
 		) {
 			requireAuth(isAdmin)
 
-			const data: Prisma.UserUpdateInput = {}
-			if (name) data.name = name
-			if (email) data.email = email
-			if (password) data.password = Hash(password)
-			if (role) data.role = role
+			const data: Prisma.UserUpdateInput = { ...rest }
+			if (password) {
+				if (password.length < 6)
+					throw ApolloError(
+						ERRORS.MALFORMED_INPUT,
+						'Password must be longer than 6 characters',
+					)
 
-			return await database.user.update({ where: { id }, data })
+				data.password = Hash(password)
+			}
+
+			return await database.user.update({ where, data })
 		},
 
-		async updateMe(_, { name, email }, { database, requireAuth, user }) {
-			requireAuth()
-
-			const data: Prisma.UserUpdateInput = {}
-			if (name) data.name = name
-			if (email) data.email = email
-
-			return await database.user.update({ where: { id: user?.id }, data })
-		},
-
-		async deleteUser(_, { id }, { database, requireAuth, isAdmin }) {
+		async deleteUser(_, input, { database, requireAuth, isAdmin }) {
 			requireAuth(isAdmin)
 
-			return await database.user.delete({ where: { id } })
+			return await database.user.delete(input)
 		},
 	},
 }

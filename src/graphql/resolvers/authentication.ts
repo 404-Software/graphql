@@ -15,7 +15,13 @@ const signJWT = (payload: Token) =>
 
 const Authentication: Resolvers = {
 	Query: {
-		async login(_, { email, password }, { database }) {
+		async login(_, { data: { email, password } }, { database }) {
+			if (!validateEmail(email))
+				throw ApolloError(
+					ERRORS.MALFORMED_INPUT,
+					'Please provide a valid email address',
+				)
+
 			const user = await database.user.findUnique({
 				where: { email: email.toLowerCase() },
 			})
@@ -31,7 +37,13 @@ const Authentication: Resolvers = {
 			}
 		},
 
-		async checkEmail(_, { email }, { database }) {
+		async checkEmail(_, { data: { email } }, { database }) {
+			if (!validateEmail(email))
+				throw ApolloError(
+					ERRORS.MALFORMED_INPUT,
+					'Please provide a valid email address',
+				)
+
 			const user = await database.user.findUnique({
 				where: { email: email.toLowerCase() },
 			})
@@ -41,7 +53,7 @@ const Authentication: Resolvers = {
 			return true
 		},
 
-		async refreshToken(_, { token }, { database }) {
+		async refreshToken(_, { data: { token } }, { database }) {
 			const API_SECRET = process.env.API_SECRET
 
 			if (!API_SECRET) throw ApolloError(ERRORS.INTERNAL_ERROR)
@@ -58,8 +70,9 @@ const Authentication: Resolvers = {
 			}
 		},
 	},
+
 	Mutation: {
-		async registerPractitioner(_, { name, email, password }, { database }) {
+		async register(_, { data: { email, password, name } }, { database }) {
 			if (password.length < 6)
 				throw ApolloError(
 					ERRORS.MALFORMED_INPUT,
@@ -73,11 +86,7 @@ const Authentication: Resolvers = {
 				)
 
 			const user = await database.user.create({
-				data: {
-					name,
-					email,
-					password: Hash(password),
-				},
+				data: { name, email, password: Hash(password), role: 'DEFAULT' },
 			})
 
 			return {
@@ -86,7 +95,13 @@ const Authentication: Resolvers = {
 			}
 		},
 
-		async requestPasswordReset(_, { email }, { database }) {
+		async requestPasswordReset(_, { data: { email } }, { database }) {
+			if (!validateEmail(email))
+				throw ApolloError(
+					ERRORS.MALFORMED_INPUT,
+					'Please provide a valid email address',
+				)
+
 			const user = await database.user.findUnique({
 				where: { email: email.toLowerCase() },
 			})
@@ -95,27 +110,26 @@ const Authentication: Resolvers = {
 
 			const token = signJWT({ id: user.id })
 
-			// TODO: RETURN TOKEN TO USER
+			// TODO: SEND TOKEN TO USER
 
 			await database.token.create({
 				data: {
 					token,
 					opertation: 'RESET_PASSWORD',
-					helper: user.id,
 				},
 			})
 
 			return true
 		},
 
-		async resetPassword(_, { token, password }, { database }) {
+		async resetPassword(_, { data: { token, password } }, { database }) {
 			const savedToken = await database.token.findUnique({
 				where: { token },
 			})
 
 			const { id } = verify(token.replace(/^Bearer /i, ''), API_SECRET) as Token
 
-			if (id !== savedToken?.helper || savedToken.expired)
+			if (!id || !savedToken || savedToken.expired)
 				throw ApolloError(
 					ERRORS.MALFORMED_INPUT,
 					'Token provided is invalid or expired',
@@ -132,6 +146,12 @@ const Authentication: Resolvers = {
 					'Token provided is invalid or expired',
 				)
 			}
+
+			if (password.length < 6)
+				throw ApolloError(
+					ERRORS.MALFORMED_INPUT,
+					'Password must be longer than 6 characters',
+				)
 
 			const user = await database.user.update({
 				where: { id },

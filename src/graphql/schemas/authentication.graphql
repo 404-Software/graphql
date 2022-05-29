@@ -1,17 +1,44 @@
 extend type Query {
-	login(email: String!, password: String!): Authentication
-	checkEmail(email: String!): Boolean
-	refreshToken(token: String!): Authentication
+	login(data: LoginInput!): Authentication
+	checkEmail(data: CheckEmailInput!): Boolean
+	refreshToken(data: RefreshTokenInput!): Authentication
 }
 
 extend type Mutation {
-	registerPractitioner(name: String!, email: String!, password: String!): Authentication
-
-	requestPasswordReset(email: String!): Boolean
-	resetPassword(token: String!, password: String!): Authentication
+	register(data: RegistrationInput!): Authentication
+	requestPasswordReset(data: RequestPasswordResetInput!): Boolean
+	resetPassword(data: ResetPasswordInput!): Authentication
 }
 
 type Authentication {
 	user: User!
 	token: String!
+}
+
+input LoginInput {
+	email: String!
+	password: String!
+}
+
+input CheckEmailInput {
+	email: String!
+}
+
+input RefreshTokenInput {
+	token: String!
+}
+
+input RegistrationInput {
+	name: String!
+	email: String!
+	password: String!
+}
+
+input RequestPasswordResetInput {
+	email: String!
+}
+
+input ResetPasswordInput {
+	token: String!
+	password: String!
 }

@@ -8,18 +8,70 @@ type Mutation {
 
 scalar Upload
 scalar Date
+scalar Null
+scalar NullableString
+scalar NullableID
 
-input Paginate {
-	page: Int
-	perPage: Int
+input IDFilter {
+	equals: ID
+	in: [ID!]
+	notIn: [ID!]
+	lt: ID
+	lte: ID
+	gt: ID
+	gte: ID
+	not: IDFilter
 }
 
-enum SortOrder {
-	ASC
-	DESC
+input RelationshipNullableFilter {
+	id: ID
+	is: Null
+	isNot: Null
 }
 
-input Sort {
-	sortField: String
-	sortOrder: SortOrder
+input ArrayNullableFilter {
+	equals: [String!]
+	hasSome: [String!]
+	hasEvery: [String!]
+	has: String
+	isEmpty: Boolean
+}
+
+input StringNullableFilter {
+	equals: String
+	in: [String!]
+	notIn: [String!]
+	lt: String
+	lte: String
+	gt: String
+	gte: String
+	contains: String
+	startsWith: String
+	endsWith: String
+	mode: QueryMode
+	not: NestedStringNullableFilter
+}
+
+input NestedStringNullableFilter {
+	equals: String
+	in: [String!]
+	notIn: [String!]
+	lt: String
+	lte: String
+	gt: String
+	gte: String
+	contains: String
+	startsWith: String
+	endsWith: String
+	not: NestedStringNullableFilter
+}
+
+enum QueryMode {
+	default
+	insensitive
+}
+
+enum OrderDirection {
+	asc
+	desc
 }
