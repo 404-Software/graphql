@@ -39,6 +39,8 @@ plugins:
   - serverless-domain-manager
   - serverless-webpack
   - serverless-dotenv-plugin
+  - serverless-api-gateway-throttling
+  - serverless-webpack-prisma
 custom:
   includeDependencies: true
   webpack:
@@ -49,15 +51,14 @@ custom:
     packagerOptions:
       scripts:
         - npx prisma generate
-        - rm node_modules/.prisma/client/libquery_engine-debian-openssl-1.1.x.so.node
-        - rm -rf node_modules/prisma/
-        - rm -rf node_modules/@prisma/engines
-        - rm -rf node_modules/@prisma/engines-version
   customDomain:
     domainName: *API_URL*
     basePath: ''
     createRoute53Record: true
     stage: ${self:provider.stage}
+  apiGatewayThrottling:
+    maxRequestsPerSecond: 2000
+    maxConcurrentRequests: 500
 package:
   patterns:
     - '!src/graphql.ts'
