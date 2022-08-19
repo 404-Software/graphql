@@ -13,14 +13,18 @@ scalar NullableString
 scalar NullableID
 
 input IDFilter {
+	contains: ID
+	startsWith: ID
+	endsWith: ID
 	equals: ID
-	in: [ID!]
-	notIn: [ID!]
-	lt: ID
-	lte: ID
 	gt: ID
 	gte: ID
+	lt: ID
+	lte: ID
+	mode: QueryMode
 	not: IDFilter
+	in: [ID!]
+	notIn: [ID!]
 }
 
 input RelationshipNullableFilter {

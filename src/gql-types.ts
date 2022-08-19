@@ -41,14 +41,18 @@ export type CheckEmailInput = {
 };
 
 export type IdFilter = {
+  contains?: InputMaybe<Scalars['ID']>;
+  endsWith?: InputMaybe<Scalars['ID']>;
   equals?: InputMaybe<Scalars['ID']>;
   gt?: InputMaybe<Scalars['ID']>;
   gte?: InputMaybe<Scalars['ID']>;
   in?: InputMaybe<Array<Scalars['ID']>>;
   lt?: InputMaybe<Scalars['ID']>;
   lte?: InputMaybe<Scalars['ID']>;
+  mode?: InputMaybe<QueryMode>;
   not?: InputMaybe<IdFilter>;
   notIn?: InputMaybe<Array<Scalars['ID']>>;
+  startsWith?: InputMaybe<Scalars['ID']>;
 };
 
 export type LoginInput = {
