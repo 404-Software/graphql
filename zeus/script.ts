@@ -84,12 +84,18 @@ async function zeus() {
 		Object.keys(scalars).forEach(key => {
 			replacements.push({
 				before: `["${key}"]: "scalar" & { name: "${key}" };`,
-				after: `["${key}"]: ${scalars[key]};`,
+				after: `["${key}"]: ${scalars[key].replace(
+					'../scalar-types#',
+					'CustomTypes.',
+				)};`,
 			})
 
 			replacements.push({
 				before: `["${key}"]:unknown;`,
-				after: `["${key}"]: ${scalars[key]};`,
+				after: `["${key}"]: ${scalars[key].replace(
+					'../scalar-types#',
+					'CustomTypes.',
+				)};`,
 			})
 		})
 
@@ -97,7 +103,11 @@ async function zeus() {
 			data = data.replace(replacement.before, replacement.after)
 		})
 
-		fs.writeFileSync(zeusFile, data, 'utf8')
+		fs.writeFileSync(
+			zeusFile,
+			`import * as CustomTypes from '../scalar-types' ${data}`,
+			'utf8',
+		)
 	})
 }
 

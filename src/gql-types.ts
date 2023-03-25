@@ -1,3 +1,4 @@
+import { File } from '../scalar-types';
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { User as UserModel } from '@prisma/client';
 import { Context } from './context';

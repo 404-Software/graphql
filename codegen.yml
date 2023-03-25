@@ -16,7 +16,7 @@ generates:
         Password: string
         OTP: string
         PhoneNumber: string
-        Upload: File
+        Upload: ../scalar-types#File
         Date: Date
       inputMaybeValue: T | undefined
       contextType: ./context#Context

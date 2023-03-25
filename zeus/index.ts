@@ -1,4 +1,4 @@
-/* eslint-disable */
+import * as CustomTypes from '../scalar-types' /* eslint-disable */
 
 import { AllTypesProps, ReturnTypes, Ops } from './const';
 
@@ -1022,7 +1022,7 @@ deleteUser?: [{	where: ValueTypes["UserWhereUniqueInput"] | Variable<any, string
 	message?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
-	["Upload"]: File;
+	["Upload"]: CustomTypes.File;
 	["Date"]: Date;
 	["Null"]: null | undefined;
 	["NullableString"]: null | string;
@@ -1748,7 +1748,7 @@ export type GraphQLTypes = {
 	__typename: "MessageResponse",
 	message: string
 };
-	["Upload"]: File;
+	["Upload"]: CustomTypes.File;
 	["Date"]: Date;
 	["Null"]: null | undefined;
 	["NullableString"]: null | string;

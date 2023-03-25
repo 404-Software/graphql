@@ -17,5 +17,5 @@
 		"strict": true
 	},
 	"exclude": ["node_modules", "src/**/*.test.ts", "types.ts"],
-	"include": ["src/**/*.ts", "config.ts"]
+	"include": ["src/**/*.ts", "config.ts", "scalar-types.d.ts"]
 }
