@@ -24,6 +24,7 @@ enum UserRole {
 
 type User {
 	id: ID!
+
 	name: String!
 	email: String!
 	role: UserRole!
@@ -56,14 +57,14 @@ input UserWhereInput {
 input UserCreateInput {
 	name: String!
 	email: String!
-	password: String!
+	password: Password!
 	role: UserRole
 }
 
 input UserUpdateInput {
 	name: String
 	email: String
-	password: String
+	password: Password
 	role: UserRole
 }
 

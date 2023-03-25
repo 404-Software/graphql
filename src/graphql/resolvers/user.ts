@@ -1,9 +1,6 @@
-import { Prisma } from '@prisma/client'
 import { Resolvers } from '../../gql-types'
-import ERRORS, { ApolloError } from '../../functions/errors'
-import Hash from '../../functions/hash'
 
-const User: Resolvers = {
+export default {
 	Query: {
 		async myUser(_, __, { database, requireAuth, user }) {
 			requireAuth()
@@ -31,23 +28,8 @@ const User: Resolvers = {
 	},
 
 	Mutation: {
-		async createUser(
-			_,
-			{ data: { password, ...rest } },
-			{ database, requireAuth, isAdmin },
-		) {
+		async createUser(_, { data }, { database, requireAuth, isAdmin }) {
 			requireAuth(isAdmin)
-
-			if (password.length < 6)
-				throw ApolloError(
-					ERRORS.MALFORMED_INPUT,
-					'Password must be longer than 6 characters',
-				)
-
-			const data: Prisma.UserCreateInput = {
-				password: Hash(password),
-				...rest,
-			}
 
 			return await database.user.create({ data })
 		},
@@ -61,23 +43,8 @@ const User: Resolvers = {
 			})
 		},
 
-		async updateUser(
-			_,
-			{ data: { password, ...rest }, where },
-			{ database, requireAuth, isAdmin },
-		) {
+		async updateUser(_, { data, where }, { database, requireAuth, isAdmin }) {
 			requireAuth(isAdmin)
-
-			const data: Prisma.UserUpdateInput = { ...rest }
-			if (password) {
-				if (password.length < 6)
-					throw ApolloError(
-						ERRORS.MALFORMED_INPUT,
-						'Password must be longer than 6 characters',
-					)
-
-				data.password = Hash(password)
-			}
 
 			return await database.user.update({ where, data })
 		},
@@ -88,6 +55,4 @@ const User: Resolvers = {
 			return await database.user.delete(input)
 		},
 	},
-}
-
-export default User
+} as Resolvers

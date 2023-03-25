@@ -16,12 +16,12 @@ type Authentication {
 }
 
 input LoginInput {
-	email: String!
+	email: EmailAddress!
 	password: String!
 }
 
 input CheckEmailInput {
-	email: String!
+	email: EmailAddress!
 }
 
 input RefreshTokenInput {
@@ -30,15 +30,15 @@ input RefreshTokenInput {
 
 input RegistrationInput {
 	name: String!
-	email: String!
-	password: String!
+	email: EmailAddress!
+	password: Password!
 }
 
 input RequestPasswordResetInput {
-	email: String!
+	email: EmailAddress!
 }
 
 input ResetPasswordInput {
 	token: String!
-	password: String!
+	password: Password!
 }

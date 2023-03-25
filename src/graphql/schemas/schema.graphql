@@ -1,0 +1,303 @@
+extend type Query {
+	login(data: LoginInput!): Authentication
+	checkEmail(data: CheckEmailInput!): Boolean
+	refreshToken(data: RefreshTokenInput!): Authentication
+}
+
+extend type Mutation {
+	register(data: RegistrationInput!): Authentication
+	requestPasswordReset(data: RequestPasswordResetInput!): Boolean
+	resetPassword(data: ResetPasswordInput!): Authentication
+}
+
+type Authentication {
+	user: User!
+	token: String!
+}
+
+input LoginInput {
+	email: EmailAddress!
+	password: String!
+}
+
+input CheckEmailInput {
+	email: EmailAddress!
+}
+
+input RefreshTokenInput {
+	token: String!
+}
+
+input RegistrationInput {
+	name: String!
+	email: EmailAddress!
+	password: Password!
+}
+
+input RequestPasswordResetInput {
+	email: EmailAddress!
+}
+
+input ResetPasswordInput {
+	token: String!
+	password: Password!
+}
+
+type Query {
+	_empty: String
+}
+
+type Mutation {
+	_empty: String
+}
+
+input IDFilter {
+	equals: ID
+	in: [ID!]
+	notIn: [ID!]
+	lt: ID
+	lte: ID
+	gt: ID
+	gte: ID
+	not: IDFilter
+}
+
+input RelationshipNullableFilter {
+	id: ID
+	is: Null
+	isNot: Null
+}
+
+input ArrayNullableFilter {
+	equals: [String!]
+	hasSome: [String!]
+	hasEvery: [String!]
+	has: String
+	isEmpty: Boolean
+}
+
+input StringNullableFilter {
+	equals: String
+	in: [String!]
+	notIn: [String!]
+	lt: String
+	lte: String
+	gt: String
+	gte: String
+	contains: String
+	startsWith: String
+	endsWith: String
+	mode: QueryMode
+	not: NestedStringNullableFilter
+}
+
+input NestedStringNullableFilter {
+	equals: String
+	in: [String!]
+	notIn: [String!]
+	lt: String
+	lte: String
+	gt: String
+	gte: String
+	contains: String
+	startsWith: String
+	endsWith: String
+	not: NestedStringNullableFilter
+}
+
+input IntNullableFilter {
+	equals: Int
+	in: [Int!]
+	notIn: [Int!]
+	lt: Int
+	lte: Int
+	gt: Int
+	gte: Int
+	not: NestedIntNullableFilter
+}
+
+input NestedIntNullableFilter {
+	equals: Int
+	in: [Int!]
+	notIn: [Int!]
+	lt: Int
+	lte: Int
+	gt: Int
+	gte: Int
+	not: NestedIntNullableFilter
+}
+
+input FloatNullableFilter {
+	equals: Float
+	in: [Float!]
+	notIn: [Float!]
+	lt: Float
+	lte: Float
+	gt: Float
+	gte: Float
+	not: NestedFloatNullableFilter
+}
+
+input NestedFloatNullableFilter {
+	equals: Float
+	in: [Float!]
+	notIn: [Float!]
+	lt: Float
+	lte: Float
+	gt: Float
+	gte: Float
+	not: NestedFloatNullableFilter
+}
+
+input BooleanNullableFilter {
+	equals: Boolean
+	not: Boolean
+}
+
+input NestedBooleanNullableFilter {
+	equals: Boolean
+	not: NestedBooleanNullableFilter
+}
+
+input DateNullableFilter {
+	equals: Date
+	gt: Date
+	gte: Date
+	in: [Date!]
+	lt: Date
+	lte: Date
+	not: Date
+	notIn: [Date!]
+}
+
+input NestedDateNullableFilter {
+	equals: Date
+	in: [Date!]
+	notIn: [Date!]
+	lt: Date
+	lte: Date
+	gt: Date
+	gte: Date
+	not: NestedDateNullableFilter
+}
+
+enum QueryMode {
+	default
+	insensitive
+}
+
+enum OrderDirection {
+	asc
+	desc
+}
+
+type BatchPayload {
+	count: Int!
+}
+
+enum Gender {
+	MALE
+	FEMALE
+}
+
+type MessageResponse {
+	message: String!
+}
+
+scalar Upload
+scalar Date
+scalar Null
+scalar NullableString
+scalar NullableNumber
+scalar NullableID
+scalar UntrimmedString
+scalar LowercaseString
+scalar UppercaseString
+scalar EmailAddress
+scalar Password
+scalar OTP
+scalar PhoneNumber
+
+extend type Query {
+	myUser: User
+	user(where: UserWhereUniqueInput!): User
+	users(
+		where: UserWhereInput = {}
+		orderBy: [UserOrderByInput!] = [{ createdAt: "desc" }]
+		take: Int = 10
+		skip: Int = 0
+	): [User!]!
+	usersCount(where: UserWhereInput = {}): Int
+}
+
+extend type Mutation {
+	createUser(data: UserCreateInput!): User
+	updateMyUser(data: MyUserUpdateInput!): User
+	updateUser(where: UserWhereUniqueInput!, data: UserUpdateInput!): User
+	deleteUser(where: UserWhereUniqueInput!): User
+}
+
+enum UserRole {
+	DEFAULT
+	ADMIN
+}
+
+type User {
+	id: ID!
+
+	name: String!
+	email: String!
+	role: UserRole!
+
+	createdAt: Date!
+	updatedAt: Date!
+}
+
+input UserWhereUniqueInput {
+	id: ID
+	email: String
+}
+
+input UserRoleNullableFilter {
+	equals: UserRole
+	in: [UserRole!]
+	notIn: [UserRole!]
+}
+
+input UserWhereInput {
+	AND: [UserWhereInput!]
+	OR: [UserWhereInput!]
+	NOT: [UserWhereInput!]
+	id: IDFilter
+	name: StringNullableFilter
+	email: StringNullableFilter
+	role: UserRoleNullableFilter
+}
+
+input UserCreateInput {
+	name: String!
+	email: String!
+	password: Password!
+	role: UserRole
+}
+
+input UserUpdateInput {
+	name: String
+	email: String
+	password: Password
+	role: UserRole
+}
+
+input MyUserUpdateInput {
+	name: String
+	email: String
+}
+
+input UserOrderByInput {
+	id: OrderDirection
+	name: OrderDirection
+	email: OrderDirection
+	role: OrderDirection
+
+	createdAt: OrderDirection
+}

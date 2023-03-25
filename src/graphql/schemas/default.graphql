@@ -6,25 +6,15 @@ type Mutation {
 	_empty: String
 }
 
-scalar Upload
-scalar Date
-scalar Null
-scalar NullableString
-scalar NullableID
-
 input IDFilter {
-	contains: ID
-	startsWith: ID
-	endsWith: ID
 	equals: ID
-	gt: ID
-	gte: ID
-	lt: ID
-	lte: ID
-	mode: QueryMode
-	not: IDFilter
 	in: [ID!]
 	notIn: [ID!]
+	lt: ID
+	lte: ID
+	gt: ID
+	gte: ID
+	not: IDFilter
 }
 
 input RelationshipNullableFilter {
@@ -70,6 +60,82 @@ input NestedStringNullableFilter {
 	not: NestedStringNullableFilter
 }
 
+input IntNullableFilter {
+	equals: Int
+	in: [Int!]
+	notIn: [Int!]
+	lt: Int
+	lte: Int
+	gt: Int
+	gte: Int
+	not: NestedIntNullableFilter
+}
+
+input NestedIntNullableFilter {
+	equals: Int
+	in: [Int!]
+	notIn: [Int!]
+	lt: Int
+	lte: Int
+	gt: Int
+	gte: Int
+	not: NestedIntNullableFilter
+}
+
+input FloatNullableFilter {
+	equals: Float
+	in: [Float!]
+	notIn: [Float!]
+	lt: Float
+	lte: Float
+	gt: Float
+	gte: Float
+	not: NestedFloatNullableFilter
+}
+
+input NestedFloatNullableFilter {
+	equals: Float
+	in: [Float!]
+	notIn: [Float!]
+	lt: Float
+	lte: Float
+	gt: Float
+	gte: Float
+	not: NestedFloatNullableFilter
+}
+
+input BooleanNullableFilter {
+	equals: Boolean
+	not: Boolean
+}
+
+input NestedBooleanNullableFilter {
+	equals: Boolean
+	not: NestedBooleanNullableFilter
+}
+
+input DateNullableFilter {
+	equals: Date
+	gt: Date
+	gte: Date
+	in: [Date!]
+	lt: Date
+	lte: Date
+	not: Date
+	notIn: [Date!]
+}
+
+input NestedDateNullableFilter {
+	equals: Date
+	in: [Date!]
+	notIn: [Date!]
+	lt: Date
+	lte: Date
+	gt: Date
+	gte: Date
+	not: NestedDateNullableFilter
+}
+
 enum QueryMode {
 	default
 	insensitive
@@ -78,4 +144,17 @@ enum QueryMode {
 enum OrderDirection {
 	asc
 	desc
+}
+
+type BatchPayload {
+	count: Int!
+}
+
+enum Gender {
+	MALE
+	FEMALE
+}
+
+type MessageResponse {
+	message: String!
 }

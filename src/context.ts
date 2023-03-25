@@ -1,7 +1,7 @@
+import { ApolloError } from './functions/errors'
 import { PrismaClient } from '@prisma/client'
 import { User } from './gql-types'
 import { verify } from 'jsonwebtoken'
-import ERRORS, { ApolloError } from './functions/errors'
 
 export const database = new PrismaClient()
 
@@ -9,8 +9,7 @@ export type Context = {
 	database: PrismaClient
 	user?: Pick<User, 'id' | 'role'>
 	isAdmin: boolean
-	// eslint-disable-next-line no-unused-vars
-	requireAuth: (statement?: boolean) => void
+	requireAuth: (authorization?: boolean) => void
 	ip: string
 }
 
@@ -18,15 +17,11 @@ type Request = {
 	headers: {
 		Authorization?: string
 		authorization?: string
+		'User-Agent'?: string
+		'user-agent'?: string
 	}
-	requestContext?: {
-		identity?: {
-			sourceIp?: string
-		}
-	}
-	socket?: {
-		remoteAddress?: string
-	}
+	requestContext?: { http?: { sourceIp?: string } }
+	socket?: { remoteAddress?: string }
 }
 
 export type Token = {
@@ -43,42 +38,51 @@ export default async function ContextSetup({
 	if (!API_SECRET)
 		throw new Error('The API_SECRET environment variable must be set')
 
+	const config = await database.config.findFirst()
+
 	const token = headers.Authorization || headers.authorization
+	const ip =
+		requestContext?.http?.sourceIp || socket?.remoteAddress || 'unknown'
+	const userAgent = headers['User-Agent'] || headers['user-agent']
 
-	if (token) {
-		const { id } = verify(
-			token.replace(/^Bearer /i, ''),
-			API_SECRET,
-			(err, decoded) => {
-				if (err) {
-					throw ApolloError(ERRORS.INVALID_TOKEN)
-				}
-
-				return decoded
-			},
-		) as unknown as Token
-
-		const user = await database.user.findUnique({ where: { id } })
-
-		if (!user) throw ApolloError(ERRORS.INVALID_TOKEN)
+	if (!token) {
+		if (config?.maintenanceMode) throw ApolloError('MAINTENANCE_ACTIVE')
 
 		return {
 			database,
-			user: { id: user.id, role: user.role },
-			isAdmin: user.role === 'ADMIN',
-			requireAuth(statement?: boolean) {
-				if (statement === false) throw ApolloError(ERRORS.UNAUTHORIZED)
+			isAdmin: false,
+			requireAuth() {
+				throw ApolloError('NO_TOKEN')
 			},
-			ip: requestContext?.identity?.sourceIp || socket?.remoteAddress,
+			ip,
+			userAgent,
 		}
 	}
 
+	const trimmedToken = token.replace('Bearer ', '')
+
+	const { id } = verify(trimmedToken, API_SECRET, (err, decoded) => {
+		if (err) throw ApolloError('INVALID_TOKEN')
+
+		return decoded
+	}) as unknown as { id: string }
+
+	const user = await database.user.findUniqueOrThrow({
+		where: { id },
+		select: { id: true, role: true },
+	})
+
+	if (config?.maintenanceMode && user.role !== 'ADMIN')
+		throw ApolloError('MAINTENANCE_ACTIVE')
+
 	return {
 		database,
-		isAdmin: false,
-		requireAuth() {
-			throw ApolloError(ERRORS.NO_TOKEN)
+		user,
+		isAdmin: user.role === 'ADMIN',
+		requireAuth(authorization = true) {
+			if (!authorization) throw ApolloError('UNAUTHORIZED')
 		},
-		ip: requestContext?.identity?.sourceIp || socket?.remoteAddress,
+		ip,
+		userAgent,
 	}
 }

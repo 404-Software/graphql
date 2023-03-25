@@ -15,11 +15,19 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  Date: any;
+  Date: Date;
+  EmailAddress: string;
+  LowercaseString: string;
   Null: any;
   NullableID: null | string;
+  NullableNumber: null | number;
   NullableString: null | string;
-  Upload: any;
+  OTP: string;
+  Password: string;
+  PhoneNumber: string;
+  UntrimmedString: string;
+  Upload: File;
+  UppercaseString: string;
 };
 
 export type ArrayNullableFilter = {
@@ -36,28 +44,76 @@ export type Authentication = {
   user: User;
 };
 
-export type CheckEmailInput = {
-  email: Scalars['String'];
+export type BatchPayload = {
+  __typename?: 'BatchPayload';
+  count: Scalars['Int'];
 };
 
+export type BooleanNullableFilter = {
+  equals?: InputMaybe<Scalars['Boolean']>;
+  not?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type CheckEmailInput = {
+  email: Scalars['EmailAddress'];
+};
+
+export type DateNullableFilter = {
+  equals?: InputMaybe<Scalars['Date']>;
+  gt?: InputMaybe<Scalars['Date']>;
+  gte?: InputMaybe<Scalars['Date']>;
+  in?: InputMaybe<Array<Scalars['Date']>>;
+  lt?: InputMaybe<Scalars['Date']>;
+  lte?: InputMaybe<Scalars['Date']>;
+  not?: InputMaybe<Scalars['Date']>;
+  notIn?: InputMaybe<Array<Scalars['Date']>>;
+};
+
+export type FloatNullableFilter = {
+  equals?: InputMaybe<Scalars['Float']>;
+  gt?: InputMaybe<Scalars['Float']>;
+  gte?: InputMaybe<Scalars['Float']>;
+  in?: InputMaybe<Array<Scalars['Float']>>;
+  lt?: InputMaybe<Scalars['Float']>;
+  lte?: InputMaybe<Scalars['Float']>;
+  not?: InputMaybe<NestedFloatNullableFilter>;
+  notIn?: InputMaybe<Array<Scalars['Float']>>;
+};
+
+export type Gender =
+  | 'FEMALE'
+  | 'MALE';
+
 export type IdFilter = {
-  contains?: InputMaybe<Scalars['ID']>;
-  endsWith?: InputMaybe<Scalars['ID']>;
   equals?: InputMaybe<Scalars['ID']>;
   gt?: InputMaybe<Scalars['ID']>;
   gte?: InputMaybe<Scalars['ID']>;
   in?: InputMaybe<Array<Scalars['ID']>>;
   lt?: InputMaybe<Scalars['ID']>;
   lte?: InputMaybe<Scalars['ID']>;
-  mode?: InputMaybe<QueryMode>;
   not?: InputMaybe<IdFilter>;
   notIn?: InputMaybe<Array<Scalars['ID']>>;
-  startsWith?: InputMaybe<Scalars['ID']>;
+};
+
+export type IntNullableFilter = {
+  equals?: InputMaybe<Scalars['Int']>;
+  gt?: InputMaybe<Scalars['Int']>;
+  gte?: InputMaybe<Scalars['Int']>;
+  in?: InputMaybe<Array<Scalars['Int']>>;
+  lt?: InputMaybe<Scalars['Int']>;
+  lte?: InputMaybe<Scalars['Int']>;
+  not?: InputMaybe<NestedIntNullableFilter>;
+  notIn?: InputMaybe<Array<Scalars['Int']>>;
 };
 
 export type LoginInput = {
-  email: Scalars['String'];
+  email: Scalars['EmailAddress'];
   password: Scalars['String'];
+};
+
+export type MessageResponse = {
+  __typename?: 'MessageResponse';
+  message: Scalars['String'];
 };
 
 export type Mutation = {
@@ -111,6 +167,44 @@ export type MutationUpdateUserArgs = {
 export type MyUserUpdateInput = {
   email?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
+};
+
+export type NestedBooleanNullableFilter = {
+  equals?: InputMaybe<Scalars['Boolean']>;
+  not?: InputMaybe<NestedBooleanNullableFilter>;
+};
+
+export type NestedDateNullableFilter = {
+  equals?: InputMaybe<Scalars['Date']>;
+  gt?: InputMaybe<Scalars['Date']>;
+  gte?: InputMaybe<Scalars['Date']>;
+  in?: InputMaybe<Array<Scalars['Date']>>;
+  lt?: InputMaybe<Scalars['Date']>;
+  lte?: InputMaybe<Scalars['Date']>;
+  not?: InputMaybe<NestedDateNullableFilter>;
+  notIn?: InputMaybe<Array<Scalars['Date']>>;
+};
+
+export type NestedFloatNullableFilter = {
+  equals?: InputMaybe<Scalars['Float']>;
+  gt?: InputMaybe<Scalars['Float']>;
+  gte?: InputMaybe<Scalars['Float']>;
+  in?: InputMaybe<Array<Scalars['Float']>>;
+  lt?: InputMaybe<Scalars['Float']>;
+  lte?: InputMaybe<Scalars['Float']>;
+  not?: InputMaybe<NestedFloatNullableFilter>;
+  notIn?: InputMaybe<Array<Scalars['Float']>>;
+};
+
+export type NestedIntNullableFilter = {
+  equals?: InputMaybe<Scalars['Int']>;
+  gt?: InputMaybe<Scalars['Int']>;
+  gte?: InputMaybe<Scalars['Int']>;
+  in?: InputMaybe<Array<Scalars['Int']>>;
+  lt?: InputMaybe<Scalars['Int']>;
+  lte?: InputMaybe<Scalars['Int']>;
+  not?: InputMaybe<NestedIntNullableFilter>;
+  notIn?: InputMaybe<Array<Scalars['Int']>>;
 };
 
 export type NestedStringNullableFilter = {
@@ -185,9 +279,9 @@ export type RefreshTokenInput = {
 };
 
 export type RegistrationInput = {
-  email: Scalars['String'];
+  email: Scalars['EmailAddress'];
   name: Scalars['String'];
-  password: Scalars['String'];
+  password: Scalars['Password'];
 };
 
 export type RelationshipNullableFilter = {
@@ -197,11 +291,11 @@ export type RelationshipNullableFilter = {
 };
 
 export type RequestPasswordResetInput = {
-  email: Scalars['String'];
+  email: Scalars['EmailAddress'];
 };
 
 export type ResetPasswordInput = {
-  password: Scalars['String'];
+  password: Scalars['Password'];
   token: Scalars['String'];
 };
 
@@ -233,7 +327,7 @@ export type User = {
 export type UserCreateInput = {
   email: Scalars['String'];
   name: Scalars['String'];
-  password: Scalars['String'];
+  password: Scalars['Password'];
   role?: InputMaybe<UserRole>;
 };
 
@@ -258,7 +352,7 @@ export type UserRoleNullableFilter = {
 export type UserUpdateInput = {
   email?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
-  password?: InputMaybe<Scalars['String']>;
+  password?: InputMaybe<Scalars['Password']>;
   role?: InputMaybe<UserRole>;
 };
 
@@ -344,24 +438,43 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   ArrayNullableFilter: ArrayNullableFilter;
   Authentication: ResolverTypeWrapper<Omit<Authentication, 'user'> & { user: ResolversTypes['User'] }>;
+  BatchPayload: ResolverTypeWrapper<BatchPayload>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  BooleanNullableFilter: BooleanNullableFilter;
   CheckEmailInput: CheckEmailInput;
   Date: ResolverTypeWrapper<Scalars['Date']>;
+  DateNullableFilter: DateNullableFilter;
+  EmailAddress: ResolverTypeWrapper<Scalars['EmailAddress']>;
+  Float: ResolverTypeWrapper<Scalars['Float']>;
+  FloatNullableFilter: FloatNullableFilter;
+  Gender: Gender;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   IDFilter: IdFilter;
   Int: ResolverTypeWrapper<Scalars['Int']>;
+  IntNullableFilter: IntNullableFilter;
   LoginInput: LoginInput;
+  LowercaseString: ResolverTypeWrapper<Scalars['LowercaseString']>;
+  MessageResponse: ResolverTypeWrapper<MessageResponse>;
   Mutation: ResolverTypeWrapper<{}>;
   MyUserUpdateInput: MyUserUpdateInput;
+  NestedBooleanNullableFilter: NestedBooleanNullableFilter;
+  NestedDateNullableFilter: NestedDateNullableFilter;
+  NestedFloatNullableFilter: NestedFloatNullableFilter;
+  NestedIntNullableFilter: NestedIntNullableFilter;
   NestedStringNullableFilter: NestedStringNullableFilter;
   Null: ResolverTypeWrapper<Scalars['Null']>;
   NullableID: ResolverTypeWrapper<Scalars['NullableID']>;
+  NullableNumber: ResolverTypeWrapper<Scalars['NullableNumber']>;
   NullableString: ResolverTypeWrapper<Scalars['NullableString']>;
+  OTP: ResolverTypeWrapper<Scalars['OTP']>;
   OrderDirection: OrderDirection;
+  Password: ResolverTypeWrapper<Scalars['Password']>;
+  PhoneNumber: ResolverTypeWrapper<Scalars['PhoneNumber']>;
   Query: ResolverTypeWrapper<{}>;
   QueryMode: QueryMode;
   RefreshTokenInput: RefreshTokenInput;
@@ -371,7 +484,9 @@ export type ResolversTypes = {
   ResetPasswordInput: ResetPasswordInput;
   String: ResolverTypeWrapper<Scalars['String']>;
   StringNullableFilter: StringNullableFilter;
+  UntrimmedString: ResolverTypeWrapper<Scalars['UntrimmedString']>;
   Upload: ResolverTypeWrapper<Scalars['Upload']>;
+  UppercaseString: ResolverTypeWrapper<Scalars['UppercaseString']>;
   User: ResolverTypeWrapper<UserModel>;
   UserCreateInput: UserCreateInput;
   UserOrderByInput: UserOrderByInput;
@@ -386,19 +501,36 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   ArrayNullableFilter: ArrayNullableFilter;
   Authentication: Omit<Authentication, 'user'> & { user: ResolversParentTypes['User'] };
+  BatchPayload: BatchPayload;
   Boolean: Scalars['Boolean'];
+  BooleanNullableFilter: BooleanNullableFilter;
   CheckEmailInput: CheckEmailInput;
   Date: Scalars['Date'];
+  DateNullableFilter: DateNullableFilter;
+  EmailAddress: Scalars['EmailAddress'];
+  Float: Scalars['Float'];
+  FloatNullableFilter: FloatNullableFilter;
   ID: Scalars['ID'];
   IDFilter: IdFilter;
   Int: Scalars['Int'];
+  IntNullableFilter: IntNullableFilter;
   LoginInput: LoginInput;
+  LowercaseString: Scalars['LowercaseString'];
+  MessageResponse: MessageResponse;
   Mutation: {};
   MyUserUpdateInput: MyUserUpdateInput;
+  NestedBooleanNullableFilter: NestedBooleanNullableFilter;
+  NestedDateNullableFilter: NestedDateNullableFilter;
+  NestedFloatNullableFilter: NestedFloatNullableFilter;
+  NestedIntNullableFilter: NestedIntNullableFilter;
   NestedStringNullableFilter: NestedStringNullableFilter;
   Null: Scalars['Null'];
   NullableID: Scalars['NullableID'];
+  NullableNumber: Scalars['NullableNumber'];
   NullableString: Scalars['NullableString'];
+  OTP: Scalars['OTP'];
+  Password: Scalars['Password'];
+  PhoneNumber: Scalars['PhoneNumber'];
   Query: {};
   RefreshTokenInput: RefreshTokenInput;
   RegistrationInput: RegistrationInput;
@@ -407,7 +539,9 @@ export type ResolversParentTypes = {
   ResetPasswordInput: ResetPasswordInput;
   String: Scalars['String'];
   StringNullableFilter: StringNullableFilter;
+  UntrimmedString: Scalars['UntrimmedString'];
   Upload: Scalars['Upload'];
+  UppercaseString: Scalars['UppercaseString'];
   User: UserModel;
   UserCreateInput: UserCreateInput;
   UserOrderByInput: UserOrderByInput;
@@ -423,9 +557,27 @@ export type AuthenticationResolvers<ContextType = Context, ParentType extends Re
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type BatchPayloadResolvers<ContextType = Context, ParentType extends ResolversParentTypes['BatchPayload'] = ResolversParentTypes['BatchPayload']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
   name: 'Date';
 }
+
+export interface EmailAddressScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['EmailAddress'], any> {
+  name: 'EmailAddress';
+}
+
+export interface LowercaseStringScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['LowercaseString'], any> {
+  name: 'LowercaseString';
+}
+
+export type MessageResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageResponse'] = ResolversParentTypes['MessageResponse']> = {
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -446,8 +598,24 @@ export interface NullableIdScalarConfig extends GraphQLScalarTypeConfig<Resolver
   name: 'NullableID';
 }
 
+export interface NullableNumberScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['NullableNumber'], any> {
+  name: 'NullableNumber';
+}
+
 export interface NullableStringScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['NullableString'], any> {
   name: 'NullableString';
+}
+
+export interface OtpScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['OTP'], any> {
+  name: 'OTP';
+}
+
+export interface PasswordScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Password'], any> {
+  name: 'Password';
+}
+
+export interface PhoneNumberScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['PhoneNumber'], any> {
+  name: 'PhoneNumber';
 }
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
@@ -461,8 +629,16 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   usersCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryUsersCountArgs, 'where'>>;
 };
 
+export interface UntrimmedStringScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['UntrimmedString'], any> {
+  name: 'UntrimmedString';
+}
+
 export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
   name: 'Upload';
+}
+
+export interface UppercaseStringScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['UppercaseString'], any> {
+  name: 'UppercaseString';
 }
 
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -477,13 +653,23 @@ export type UserResolvers<ContextType = Context, ParentType extends ResolversPar
 
 export type Resolvers<ContextType = Context> = {
   Authentication?: AuthenticationResolvers<ContextType>;
+  BatchPayload?: BatchPayloadResolvers<ContextType>;
   Date?: GraphQLScalarType;
+  EmailAddress?: GraphQLScalarType;
+  LowercaseString?: GraphQLScalarType;
+  MessageResponse?: MessageResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Null?: GraphQLScalarType;
   NullableID?: GraphQLScalarType;
+  NullableNumber?: GraphQLScalarType;
   NullableString?: GraphQLScalarType;
+  OTP?: GraphQLScalarType;
+  Password?: GraphQLScalarType;
+  PhoneNumber?: GraphQLScalarType;
   Query?: QueryResolvers<ContextType>;
+  UntrimmedString?: GraphQLScalarType;
   Upload?: GraphQLScalarType;
+  UppercaseString?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
 };
 

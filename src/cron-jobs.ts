@@ -1,5 +1,6 @@
 require('dotenv').config()
 import { PrismaClient } from '@prisma/client'
+
 const database = new PrismaClient()
 
 export const expireTokens = async () => {

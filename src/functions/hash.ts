@@ -7,6 +7,6 @@ if (!API_SECRET)
 
 const secretKey = API_SECRET
 
-export default function Hash(password: string) {
-	return createHmac('sha256', secretKey).update(password).digest('hex')
+export default function Hash(string: string) {
+	return createHmac('sha256', secretKey).update(string).digest('hex')
 }

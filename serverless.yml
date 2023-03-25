@@ -1,4 +1,4 @@
-service: sls-*NAME*-api
+service: sls-*NAME*-api # REPLACE_ME
 useDotenv: true
 provider:
   name: aws
@@ -9,28 +9,34 @@ provider:
     binaryMediaTypes:
       - multipart/form-data
   deploymentMethod: direct
+  httpApi:
+    cors:
+      allowedOrigins:
+        - '*'
+      allowedHeaders:
+        - '*'
+      allowedMethods:
+        - '*'
+      allowCredentials: false
+      maxAge: 86400
+    payload: '1.0'
+    disableDefaultEndpoint: false
 functions:
   graphql:
     handler: src/index.graphqlHandler
     events:
-      - http:
+      - httpApi:
           path: /
           method: post
-          cors:
-            origin: true
-      - http:
+      - httpApi:
           path: /
           method: options
-          cors:
-            origin: true
   redirect:
     handler: src/redirect.redirectHandler
     events:
-      - http:
+      - httpApi:
           path: /
           method: get
-          cors:
-            origin: true
   cronExpireTokens:
     handler: src/cron-jobs.expireTokens
     events:
@@ -52,13 +58,12 @@ custom:
       scripts:
         - npx prisma generate
   customDomain:
-    domainName: *API_URL*
+    domainName: API_URL # REPLACE_ME
     basePath: ''
     createRoute53Record: true
     stage: ${self:provider.stage}
+    apiType: http
+    endpointType: regional
   apiGatewayThrottling:
     maxRequestsPerSecond: 2000
     maxConcurrentRequests: 500
-package:
-  patterns:
-    - '!src/graphql.ts'

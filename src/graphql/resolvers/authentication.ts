@@ -1,9 +1,7 @@
+import { ApolloError } from '../../functions/errors'
 import { Resolvers } from '../../gql-types'
 import { Token } from '../../context'
-import { validate as validateEmail } from 'email-validator'
 import dayjs from 'dayjs'
-import ERRORS, { ApolloError } from '../../functions/errors'
-import Hash from '../../functions/hash'
 import jwt, { verify } from 'jsonwebtoken'
 
 const API_SECRET = process.env.API_SECRET
@@ -13,23 +11,16 @@ if (!API_SECRET)
 const signJWT = (payload: Token) =>
 	jwt.sign(payload, API_SECRET, { expiresIn: '31d' })
 
-const Authentication: Resolvers = {
+export default {
 	Query: {
 		async login(_, { data: { email, password } }, { database }) {
-			if (!validateEmail(email))
-				throw ApolloError(
-					ERRORS.MALFORMED_INPUT,
-					'Please provide a valid email address',
-				)
-
 			const user = await database.user.findUnique({
 				where: { email: email.toLowerCase() },
 			})
 
-			if (!user) throw ApolloError(ERRORS.NOT_FOUND)
+			if (!user) throw ApolloError('NOT_FOUND')
 
-			if (user.password !== Hash(password))
-				throw ApolloError(ERRORS.INCORRECT_PASSWORD)
+			if (user.password !== password) throw ApolloError('INCORRECT_PASSWORD')
 
 			return {
 				user,
@@ -38,12 +29,6 @@ const Authentication: Resolvers = {
 		},
 
 		async checkEmail(_, { data: { email } }, { database }) {
-			if (!validateEmail(email))
-				throw ApolloError(
-					ERRORS.MALFORMED_INPUT,
-					'Please provide a valid email address',
-				)
-
 			const user = await database.user.findUnique({
 				where: { email: email.toLowerCase() },
 			})
@@ -53,16 +38,10 @@ const Authentication: Resolvers = {
 			return true
 		},
 
-		async refreshToken(_, { data: { token } }, { database }) {
-			const API_SECRET = process.env.API_SECRET
-
-			if (!API_SECRET) throw ApolloError(ERRORS.INTERNAL_ERROR)
-
-			const { id } = verify(token.replace(/^Bearer /i, ''), API_SECRET) as Token
-
-			const user = await database.user.findUnique({ where: { id } })
-
-			if (!user) throw ApolloError(ERRORS.INVALID_TOKEN)
+		async refreshToken(_, __, { database, user: loggedInUser }) {
+			const user = await database.user.findUniqueOrThrow({
+				where: { id: loggedInUser?.id },
+			})
 
 			return {
 				user,
@@ -72,22 +51,8 @@ const Authentication: Resolvers = {
 	},
 
 	Mutation: {
-		async register(_, { data: { email, password, name } }, { database }) {
-			if (password.length < 6)
-				throw ApolloError(
-					ERRORS.MALFORMED_INPUT,
-					'Password must be longer than 6 characters',
-				)
-
-			if (!validateEmail(email))
-				throw ApolloError(
-					ERRORS.MALFORMED_INPUT,
-					'Please provide a valid email address',
-				)
-
-			const user = await database.user.create({
-				data: { name, email, password: Hash(password), role: 'DEFAULT' },
-			})
+		async register(_, { data }, { database }) {
+			const user = await database.user.create({ data })
 
 			return {
 				user,
@@ -96,12 +61,6 @@ const Authentication: Resolvers = {
 		},
 
 		async requestPasswordReset(_, { data: { email } }, { database }) {
-			if (!validateEmail(email))
-				throw ApolloError(
-					ERRORS.MALFORMED_INPUT,
-					'Please provide a valid email address',
-				)
-
 			const user = await database.user.findUnique({
 				where: { email: email.toLowerCase() },
 			})
@@ -115,7 +74,7 @@ const Authentication: Resolvers = {
 			await database.token.create({
 				data: {
 					token,
-					opertation: 'RESET_PASSWORD',
+					operation: 'RESET_PASSWORD',
 				},
 			})
 
@@ -123,6 +82,8 @@ const Authentication: Resolvers = {
 		},
 
 		async resetPassword(_, { data: { token, password } }, { database }) {
+			// TODO: REFACTOR THIS
+
 			const savedToken = await database.token.findUnique({
 				where: { token },
 			})
@@ -131,7 +92,7 @@ const Authentication: Resolvers = {
 
 			if (!id || !savedToken || savedToken.expired)
 				throw ApolloError(
-					ERRORS.MALFORMED_INPUT,
+					'MALFORMED_INPUT',
 					'Token provided is invalid or expired',
 				)
 
@@ -142,20 +103,20 @@ const Authentication: Resolvers = {
 				})
 
 				throw ApolloError(
-					ERRORS.MALFORMED_INPUT,
+					'MALFORMED_INPUT',
 					'Token provided is invalid or expired',
 				)
 			}
 
 			if (password.length < 6)
 				throw ApolloError(
-					ERRORS.MALFORMED_INPUT,
+					'MALFORMED_INPUT',
 					'Password must be longer than 6 characters',
 				)
 
 			const user = await database.user.update({
 				where: { id },
-				data: { password: Hash(password) },
+				data: { password },
 			})
 
 			await database.token.update({
@@ -169,6 +130,4 @@ const Authentication: Resolvers = {
 			}
 		},
 	},
-}
-
-export default Authentication
+} as Resolvers
