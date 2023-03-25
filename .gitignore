@@ -13,3 +13,4 @@ web-build/
 .serverless
 .webpack
 .env*
+yarn-error.log
