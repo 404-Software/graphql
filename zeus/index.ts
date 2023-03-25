@@ -828,7 +828,7 @@ export const $ = <Type extends GraphQLVariableType, Name extends string>(name: N
 };
 type ZEUS_INTERFACES = never
 export type ScalarCoders = {
-	Upload?: ScalarResolver;
+	File?: ScalarResolver;
 	Date?: ScalarResolver;
 	Null?: ScalarResolver;
 	NullableString?: ScalarResolver;
@@ -1022,7 +1022,7 @@ deleteUser?: [{	where: ValueTypes["UserWhereUniqueInput"] | Variable<any, string
 	message?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
-	["Upload"]: CustomTypes.File;
+	["File"]: CustomTypes.File;
 	["Date"]: Date;
 	["Null"]: null | undefined;
 	["NullableString"]: null | string;
@@ -1266,7 +1266,7 @@ deleteUser?: [{	where: ResolverInputTypes["UserWhereUniqueInput"]},ResolverInput
 	message?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
-	["Upload"]:unknown;
+	["File"]:unknown;
 	["Date"]:unknown;
 	["Null"]:unknown;
 	["NullableString"]:unknown;
@@ -1505,7 +1505,7 @@ export type ModelTypes = {
 	["MessageResponse"]: {
 		message: string
 };
-	["Upload"]:any;
+	["File"]:any;
 	["Date"]:any;
 	["Null"]:any;
 	["NullableString"]:any;
@@ -1748,7 +1748,7 @@ export type GraphQLTypes = {
 	__typename: "MessageResponse",
 	message: string
 };
-	["Upload"]: CustomTypes.File;
+	["File"]: CustomTypes.File;
 	["Date"]: Date;
 	["Null"]: null | undefined;
 	["NullableString"]: null | string;
@@ -1853,7 +1853,7 @@ type ZEUS_VARIABLES = {
 	["QueryMode"]: ValueTypes["QueryMode"];
 	["OrderDirection"]: ValueTypes["OrderDirection"];
 	["Gender"]: ValueTypes["Gender"];
-	["Upload"]: ValueTypes["Upload"];
+	["File"]: ValueTypes["File"];
 	["Date"]: ValueTypes["Date"];
 	["Null"]: ValueTypes["Null"];
 	["NullableString"]: ValueTypes["NullableString"];

@@ -1,4 +1,4 @@
-scalar Upload
+scalar File
 scalar Date
 scalar Null
 scalar NullableString

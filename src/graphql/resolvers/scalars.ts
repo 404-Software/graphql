@@ -142,5 +142,5 @@ export default {
 	OTP,
 	PhoneNumber,
 	Date: _Date,
-	Upload: GraphQLUpload,
+	File: GraphQLUpload,
 } as Resolvers

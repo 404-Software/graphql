@@ -18,6 +18,7 @@ export type Scalars = {
   Float: number;
   Date: Date;
   EmailAddress: string;
+  File: File;
   LowercaseString: string;
   Null: any;
   NullableID: null | string;
@@ -27,7 +28,6 @@ export type Scalars = {
   Password: string;
   PhoneNumber: string;
   UntrimmedString: string;
-  Upload: File;
   UppercaseString: string;
 };
 
@@ -451,6 +451,7 @@ export type ResolversTypes = {
   Date: ResolverTypeWrapper<Scalars['Date']>;
   DateNullableFilter: DateNullableFilter;
   EmailAddress: ResolverTypeWrapper<Scalars['EmailAddress']>;
+  File: ResolverTypeWrapper<Scalars['File']>;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   FloatNullableFilter: FloatNullableFilter;
   Gender: Gender;
@@ -486,7 +487,6 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars['String']>;
   StringNullableFilter: StringNullableFilter;
   UntrimmedString: ResolverTypeWrapper<Scalars['UntrimmedString']>;
-  Upload: ResolverTypeWrapper<Scalars['Upload']>;
   UppercaseString: ResolverTypeWrapper<Scalars['UppercaseString']>;
   User: ResolverTypeWrapper<UserModel>;
   UserCreateInput: UserCreateInput;
@@ -509,6 +509,7 @@ export type ResolversParentTypes = {
   Date: Scalars['Date'];
   DateNullableFilter: DateNullableFilter;
   EmailAddress: Scalars['EmailAddress'];
+  File: Scalars['File'];
   Float: Scalars['Float'];
   FloatNullableFilter: FloatNullableFilter;
   ID: Scalars['ID'];
@@ -541,7 +542,6 @@ export type ResolversParentTypes = {
   String: Scalars['String'];
   StringNullableFilter: StringNullableFilter;
   UntrimmedString: Scalars['UntrimmedString'];
-  Upload: Scalars['Upload'];
   UppercaseString: Scalars['UppercaseString'];
   User: UserModel;
   UserCreateInput: UserCreateInput;
@@ -569,6 +569,10 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 
 export interface EmailAddressScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['EmailAddress'], any> {
   name: 'EmailAddress';
+}
+
+export interface FileScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['File'], any> {
+  name: 'File';
 }
 
 export interface LowercaseStringScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['LowercaseString'], any> {
@@ -634,10 +638,6 @@ export interface UntrimmedStringScalarConfig extends GraphQLScalarTypeConfig<Res
   name: 'UntrimmedString';
 }
 
-export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
-  name: 'Upload';
-}
-
 export interface UppercaseStringScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['UppercaseString'], any> {
   name: 'UppercaseString';
 }
@@ -657,6 +657,7 @@ export type Resolvers<ContextType = Context> = {
   BatchPayload?: BatchPayloadResolvers<ContextType>;
   Date?: GraphQLScalarType;
   EmailAddress?: GraphQLScalarType;
+  File?: GraphQLScalarType;
   LowercaseString?: GraphQLScalarType;
   MessageResponse?: MessageResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
@@ -669,7 +670,6 @@ export type Resolvers<ContextType = Context> = {
   PhoneNumber?: GraphQLScalarType;
   Query?: QueryResolvers<ContextType>;
   UntrimmedString?: GraphQLScalarType;
-  Upload?: GraphQLScalarType;
   UppercaseString?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
 };

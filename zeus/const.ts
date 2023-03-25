@@ -123,7 +123,7 @@ export const AllTypesProps: Record<string,any> = {
 	QueryMode: "enum" as const,
 	OrderDirection: "enum" as const,
 	Gender: "enum" as const,
-	Upload: `scalar.Upload` as const,
+	File: `scalar.File` as const,
 	Date: `scalar.Date` as const,
 	Null: `scalar.Null` as const,
 	NullableString: `scalar.NullableString` as const,
@@ -205,7 +205,7 @@ export const ReturnTypes: Record<string,any> = {
 	MessageResponse:{
 		message:"String"
 	},
-	Upload: `scalar.Upload` as const,
+	File: `scalar.File` as const,
 	Date: `scalar.Date` as const,
 	Null: `scalar.Null` as const,
 	NullableString: `scalar.NullableString` as const,
